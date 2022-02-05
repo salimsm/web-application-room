@@ -47,4 +47,19 @@ def doRegister():
 	cursor.close()
 	return render_template('login.html',result="sucessfully registerd, please login to continue")
 	
+@app.route('/doLogin', methods=['post'])
+def doLogin():
+	email=request.form['email']
+	password=request.form['password']
+	
+	cursor=mysql.connection.cursor()
+	resp=cursor.execute('''select * from users where email=%s and password=%s;''', (email,password))
+	user=cursor.fetchone()
+	cursor.close()
+	if resp==1:
+		return render_template('home.html',result=user)
+	else:
+		return render_template('login.html',result="Invalid user")
+	
+
 app.run()
